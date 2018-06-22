@@ -1,4 +1,4 @@
-FROM ubuntu:zesty
+FROM ubuntu:bionic
 
 # install packages
 RUN apt-get update && apt-get install -q -y \
