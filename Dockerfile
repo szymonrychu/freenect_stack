@@ -1,40 +1,32 @@
 FROM ubuntu:bionic
 
-# install packages
-RUN apt-get update && apt-get install -q -y \
-    dirmngr \
-    gnupg2 \
-    lsb-release \
-    && rm -rf /var/lib/apt/lists/*
 
-# setup keys
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 421C365BD9FF1F717815A3895523BAEEB01FA116
-
-# setup sources.list
-RUN echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list
-
-# install bootstrap tools
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    python-rosdep \
-    python-rosinstall \
-    python-vcstools \
-    && rm -rf /var/lib/apt/lists/*
-
-# setup environment
+ENV DEBIAN_FRONTEND noninteractive
+ENV ROS_DISTRO melodic
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
-# bootstrap rosdep
-RUN rosdep init \
-    && rosdep update
+RUN apt-get update && apt-get install -q -y \
+        dirmngr \
+        gnupg2 \
+        sudo \
+        lsb-release && \
+    useradd -m -s /bin/bash -G sudo ros && \
+    echo "ros ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/ros && \
+    apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116 && \
+    echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list && \
+    apt-get update && \
+    apt-get install -y ros-${ROS_DISTRO}-desktop-full \
+        python-rosinstall \
+        python-rosinstall-generator \
+        python-wstool \
+        build-essential && \
+    rosdep init
 
-# install ros packages
-ENV ROS_DISTRO lunar
-RUN apt-get update && apt-get install -y \
-    ros-lunar-ros-core=1.3.2-0* \
-    && rm -rf /var/lib/apt/lists/*
+USER ros
 
-# setup entrypoint
-COPY ./ros_entrypoint.sh /
+RUN rosdep update && \
+    echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 
-ENTRYPOINT ["/ros_entrypoint.sh"]
+
+ENTRYPOINT ["bash"]
