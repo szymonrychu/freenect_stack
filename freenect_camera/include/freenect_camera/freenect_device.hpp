@@ -7,8 +7,8 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <stdexcept>
 
-#include <libfreenect/libfreenect.h>
-#include <libfreenect/libfreenect_registration.h>
+#include <libfreenect.h>
+#include <libfreenect_registration.h>
 #include <freenect_camera/image_buffer.hpp>
 
 namespace freenect_camera {

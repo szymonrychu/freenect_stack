@@ -7,8 +7,10 @@ jobs:
       - run:
           name: Setup Environment
           command: |
-            docker build -t local/ros_zesty .
-
+            docker build -t local/melodic-bionic .
+            docker run -it -v $(pwd):/build local/melodic-bionic
+      - store_artifacts:
+          path: ./freenect_stack.tgz
 workflows:
   version: 2
   build:

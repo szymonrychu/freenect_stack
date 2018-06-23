@@ -1,3 +1,8 @@
 *.pyc
 *.swp
 *~
+freenect_stack.tgz
+
+freenect_camera/build
+freenect_launch/build
+freenect_stack/build
