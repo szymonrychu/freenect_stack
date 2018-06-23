@@ -11,8 +11,43 @@ jobs:
             docker run -it -v $(pwd):/build local/melodic-bionic
       - store_artifacts:
           path: ./freenect_stack.tgz
+  tagged_build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Setup Environment
+          command: |
+            docker build -t local/melodic-bionic .
+            docker run -it -v $(pwd):/build local/melodic-bionic
+      - run:
+          name: Get GO
+          command: |
+            sudo apt-get update
+            sudo apt-get -y install golang-go
+            go get github.com/aktau/github-release
+            export PATH=$PATH:$HOME/bin
+      - run:
+          name: Upload to github
+          command: |
+            TAG_NAME=$(git describe --exact-match --tags ${CIRCLE_SHA1}) && (
+              github-release upload \
+                --user szymonrychu \
+                --repo freenect_stack \
+                --tag ${TAG_NAME} \
+                --name "freenect_stack.tgz" \
+                --file ./freenect_stack.tgz
+            )
 workflows:
   version: 2
+  tagged_build:
+    jobs:
+      - tagged_build:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
   build:
     jobs:
       - build
