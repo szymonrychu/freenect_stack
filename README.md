@@ -1,6 +1,8 @@
 freenect_stack
 ==============
 
-Build status on Travis CI [![Build Status](https://travis-ci.org/ros-drivers/freenect_stack.svg?branch=master)](http://travis-ci.org/ros-drivers/freenect_stack)
+Build status on CircleCI [![CircleCI](https://circleci.com/gh/szymonrychu/freenect_stack/tree/master.svg?style=svg)](https://circleci.com/gh/szymonrychu/freenect_stack/tree/master)
 
 libfreenect based ROS driver
+
+Update for melodic
