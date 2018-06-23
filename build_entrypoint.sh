@@ -38,5 +38,7 @@ sudo make install
 cd /artifacts
 mkdir -p opt/ros/melodic/
 sudo mv share opt/ros/melodic/
+mkdir -p usr
+sudo mv lib usr/
 sudo chown -R root .
 tar -cvzf /build/freenect_stack.tgz ./
